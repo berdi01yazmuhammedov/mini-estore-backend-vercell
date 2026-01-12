@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { upload } from "../middlewares/upload.js";
+import upload from "../middlewares/upload.js";
 import { createVape, deleteVape, getVapes, updateVape } from "../controllers/vapes.controller.js";
 const router = Router();
 router.post("/vapes", upload.single("image"), createVape);
