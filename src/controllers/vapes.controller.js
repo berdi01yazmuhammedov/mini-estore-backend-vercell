@@ -45,7 +45,7 @@ export const createVape = async (req, res) => {
         strength: strength || "",
         stock: Number(stock) || 0,
         puffs: Number(puffs) || 0,
-        image: imagePath,
+        image: imageURL,
       },
     ])
     .select()
