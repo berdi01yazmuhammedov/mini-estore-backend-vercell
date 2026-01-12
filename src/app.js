@@ -5,10 +5,8 @@ import vapesRoutes from "./routes/vapes.routes.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
-
-
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
@@ -16,10 +14,7 @@ app.use(express.json());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(
-  "/uploads",
-  express.static(path.join(__dirname, "uploads"))
-);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 //routes
 app.use("/api/vapes", vapesRoutes);
 const orders = [];
@@ -63,6 +58,9 @@ app.post("/api/orders", (request, response) => {
 
 app.get("/api/orders", (req, res) => {
   res.json(orders);
+});
+app.get("/", (req, res) => {
+  res.send("Backend is alive 🚀");
 });
 
 app.listen(PORT, () => {
