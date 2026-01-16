@@ -1,9 +1,9 @@
+import 'dotenv/config';
 import crypto from "crypto";
 import express from "express";
 import cors from "cors";
 import vapesRoutes from "./routes/vapes.routes.js";
 import path from "path";
-import 'dotenv/config';
 import { fileURLToPath } from "url";
 
 const app = express();
