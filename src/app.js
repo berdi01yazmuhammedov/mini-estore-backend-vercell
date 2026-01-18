@@ -10,6 +10,8 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,9 +21,6 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/vapes", vapesRoutes);
 const orders = [];
 //endpoint - 1
-app.post("/__test", (req, res) => {
-  res.json({ ok: true });
-});
 
 app.post("/api/orders", (request, response) => {
   const { items, contact, contactType, isPickup, address } = request.body;
