@@ -71,7 +71,27 @@ export const getVapes = async (req, res) => {
   }
   res.json(data);
 };
+export const getVapeById = async (req, res) => {
+    const id = Number(req.params.id);
+     if(Number.isNaN(id)) {
+        return res.status(400).json({ message: 'Invalid id' });
+    }
+    
+    const {data, error} = await supabase
+    .from("vapes")
+    .select("*")
+    .eq("id, id")
+    .single();
+    if (error) {
+    if (error.code === "PGRST116") {
+      return res.status(404).json({ message: "Vape not found" });
+    }
 
+    return res.status(500).json({ message: error.message });
+  }
+
+  res.json(data);
+}
 export const updateVape = async (req, res) => {
   const { id } = req.params;
   const updates = req.body;
