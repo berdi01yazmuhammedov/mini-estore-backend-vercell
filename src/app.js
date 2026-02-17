@@ -31,6 +31,4 @@ process.on("uncaughtException", (err) => {
   console.error("UNCAUGHT EXCEPTION:", err);
 });
 
-app.listen(PORT, () => {
-  console.log(`Серверт работает на порту :${PORT}`);
-});
+export default app;
