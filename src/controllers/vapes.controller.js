@@ -50,7 +50,7 @@ export const createVape = async (req, res) => {
 
     res.status(201).json(data);
   } catch (error) {
-    console.error("CREATE VAPE CRASH:", err);
+    console.error("CREATE VAPE CRASH:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
