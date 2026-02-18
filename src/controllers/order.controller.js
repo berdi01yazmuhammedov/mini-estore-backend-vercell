@@ -1,5 +1,12 @@
 import { supabase } from "../supabaseClient.js";
-
+const sendTelegramNotification = async (chatId, text) => {
+  const token = process.env.TG_BOT_TOKEN;
+  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chat_id: chatId, text }),
+  });
+};
 export const createOrder = async (req, res) => {
   const { items, contact, contactType, isPickup, address } = req.body;
 
@@ -9,7 +16,7 @@ export const createOrder = async (req, res) => {
 
   const totalPrice = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
-    0
+    0,
   );
 
   const order = {
@@ -27,7 +34,8 @@ export const createOrder = async (req, res) => {
   if (error) {
     return res.status(500).json({ error: error.message });
   }
-
+  const message = `Новый заказ:\n${orderData.items.map((i) => `${i.name} x${i.quantity}`).join("\n")}\nСпособ: ${orderData.isPickup}\nКонтакт: ${orderData.contact}`;
+  await sendTelegramNotification(process.env.TG_CHAT_ID, message);
   res.status(201).json({ success: true });
 };
 
@@ -45,13 +53,10 @@ export const getOrders = async (req, res) => {
 };
 
 export const deleteOrder = async (req, res) => {
-    const {id} = req.params;
-    const {error} = await supabase
-    .from("orders")
-    .delete()
-    .eq("id", id);
-    if(error){
-        return res.status(500).json({message: error.message});
-    }
-    res.json({ok: true});
-}
+  const { id } = req.params;
+  const { error } = await supabase.from("orders").delete().eq("id", id);
+  if (error) {
+    return res.status(500).json({ message: error.message });
+  }
+  res.json({ ok: true });
+};
