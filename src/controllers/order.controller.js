@@ -38,7 +38,10 @@ export const createOrder = async (req, res) => {
   if (error) {
     return res.status(500).json({ error: error.message });
   }
-  const message = `Новый заказ:\n${order.items.map(i => `${i.name} x ${i.quantity}`).join("\n")}\nВкус: ${i.flavor}\nСпособ: ${order.is_pickup}\nКонтакт: @${order.contact}\nСумма: ${order.total_price}₽`;
+  const message = `Новый заказ:\n${order.items
+  .map((i) => `${i.name} (${i.flavor}) x${i.quantity}`)
+  .join("\n")}\nСпособ: ${order.is_pickup}\nКонтакт: @${order.contact}\nСумма: ${order.total_price}₽`;
+
   await sendTelegramNotification(process.env.TG_CHAT_ID, message);
   res.status(201).json({ success: true });
 };
