@@ -1,11 +1,15 @@
 import { supabase } from "../supabaseClient.js";
 const sendTelegramNotification = async (chatId, text) => {
   const token = process.env.TG_BOT_TOKEN;
-  await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ chat_id: chatId, text }),
-  });
+  try {
+    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, text }),
+    });
+  } catch (err) {
+    console.error("Telegram send error:", err);
+  }
 };
 export const createOrder = async (req, res) => {
   const { items, contact, contactType, isPickup, address } = req.body;
@@ -34,7 +38,7 @@ export const createOrder = async (req, res) => {
   if (error) {
     return res.status(500).json({ error: error.message });
   }
-  const message = `Новый заказ:\n${orderData.items.map((i) => `${i.name} x${i.quantity}`).join("\n")}\nСпособ: ${orderData.isPickup}\nКонтакт: ${orderData.contact}`;
+  const message = `Новый заказ:\n${order.items.map(i => `${i.name} x${i.quantity}`).join("\n")}\nСпособ: ${order.is_pickup}\nКонтакт: ${order.contact}\nСумма: ${order.total_price}₽`;
   await sendTelegramNotification(process.env.TG_CHAT_ID, message);
   res.status(201).json({ success: true });
 };
