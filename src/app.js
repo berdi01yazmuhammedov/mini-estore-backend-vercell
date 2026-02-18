@@ -14,11 +14,16 @@ app.use("/api/vapes", vapesRoutes);
 
 app.use("/api/orders", orderRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Backend is alive 🚀");
+app.get("/", (_req, res) => {
+  return res.status(200).send("Backend is alive 🚀");
 });
-process.on("uncaughtException", (err) => {
-  console.error("UNCAUGHT EXCEPTION:", err);
+app.use((err, _req, res, _next) => {
+  console.error("UNHANDLED EXPRESS ERROR: ", err);
+  if (res.headersSent) {
+    return;
+  }
+
+  return res.status(500).json({ message: err.message });
 });
 
 export default app;
